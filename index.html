@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+	.state{
+		fill: none;
+		stroke: #a9a9a9;
+		stroke-width: 1;
+	}
+	.state:hover{
+		fill-opacity:0.5;
+	}
+	#tooltip {   
+		position: absolute;           
+		margin: 10px;
+		font: 12px sans-serif;        
+		border: 1px;      
+		pointer-events: none;         
+	}
+	#tooltip h4{
+		margin:0;
+		font-size:18px;
+    color: plum;
+	}
+	#tooltip{
+    position: absolute;           
+		margin: 10px;
+		font: 14px sans-serif;        
+		pointer-events: none;   
+		background:rgba(0,0,0,0.9);
+		border:1px solid grey;
+		border-radius:5px;
+		width:auto;
+		padding:4px;
+		color:white;
+		opacity:0;
+	}
+	#tooltip table{
+		table-layout:fixed;
+	}
+	#tooltip tr td{
+		padding:0;
+		margin:0;
+	}
+	#tooltip tr td:nth-child(1){
+		width:50px;
+	}
+	#tooltip tr td:nth-child(2){
+		text-align:center;
+	}
+</style>
+<body>
+<h1><center><h1>CRAFT BEER TAKEOVER</center></h1>
+
+<br><br>
+<h1><center>Over the last twenty years the craft beer movement has grown from a brew kit in someone's home to an industry serving hundreds of thousands of patrons each year. Craft brewers have invade your local grocery store, your everyday bar, and most likely, your fridge. Craft breweries are alive and thriving and showing no signs of slowing down.  Today, we will dive into the many locations, breweries, types of beers and flavors.
+</center>
+<br><br>
+
+ <h1><center>BREWERIES PER STATE</center></h1>
+ <br><br>
+ <center><h1>The map below depicts the number of craft breweries by state with the darker the red, the more craft breweries the state has.  When exploring, it is easy of see that some of the states that are more involved in craft brewing include California, Colorado and Washington.</center?
+ </h1>
+ <br><br>
+<div id="tooltip"></div><!-- div to hold tooltip. -->
+<svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
+<script src="uStates.js"></script> <!-- creates uStates. -->
+<script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<script>
+
+	function tooltipHtml(n, cases){	/* function to create html content string in tooltip div. */
+		return "<h4>"+n+"</h4><table>"+
+			"<tr><td>Breweries:</td><td>"+(cases)+"</td></tr></table>";
+	}
+  
+  beer_data = [];
+  
+  d3.csv("brew.csv", function (data) {
+    data.forEach(function (d) {
+    	beer_data.push({"state": d.state, "cases": +d.cases});  
+      
+    })
+  
+	var sampleData = [];	
+	start = 1;
+	end = 1 + d3.max(beer_data, function (d) { console.log(d); return d.cases });
+    
+
+    const logScale = d3.scaleLog()
+      .domain([start, end])
+    const colorScaleLog = d3.scaleSequential(
+        (d) => {
+          return d3.interpolateOranges(logScale(d)) }
+      )   
+	
+		beer_data.forEach(function(d){
+    	
+    	uStatePaths.forEach(function (s) {
+       
+        if (d.state == s.n) { 
+          d.n = s.n;
+        	d.d = s.d;
+        	d.id = s.id;
+        }
+      })
+   
+	cases = +d.cases;
+    
+  
+
+		sampleData.push({
+	   n: d.n,
+	   state: d.state,
+	   cases: cases,
+	   path: d.d,
+	   color: colorScaleLog(cases),
+	   color2:d3.interpolate("#000000", "#ffffff")(Math.round(cases)/100)});
+			});
+
+		uStates.draw("#statesvg", sampleData, tooltipHtml);
+		 })
+		d3.select(self.frameElement).style("height", "600px"); 
+	</script>
+	<br><br>
+	<h1><center>BREWERIES PER CITY</h1><br><br>
+	<h1>
+	This next visualization takes where beer is brewed to the next level and focuses more on what specific city brew beer.  The bigger the circle, the more brewerie the city has.  As you can see, some of the most popular cities for craft beers include San Diego, Manchester and Chico
+	</h1>
+	
+	
+	
+	<br><br><br><br>
+	
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book2&#47;Sheet3' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+
+	<br><br><br><br>
+	<h1><center>MOST POPULAR TYPES OF BEER</h1></center>
+	<br><br>
+	<h1><center>This visualization is depicting the different types of beer and then ranks them in the order from the most popular to the least.</center>
+	
+	<br><br><br><br>
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book5&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+	<br><br><br><br>
+	<h1><center>MOST POPULAR BEER PER BREWERY</h1>
+	
+	<br><br>
+	<h1>This visualization show chunk of different breweries and the beer that they make.  The best rated beer that they make will be on the upper left hand corner of the “brewery square” and the worst rated beer will be on the lower right hand corner.
+	<br><br><br><br></h1>
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' />  <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book2&#47;Sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+	
+	
+	
+</body>
