@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+	path { 
+		stroke: steelblue;
+		stroke-width: 2;
+		fill: none;
+	}
+	.axis path,
+	.axis line {
+		fill: none;
+		stroke: grey;
+		stroke-width: 1;
+		shape-rendering: crispEdges;
+	}
+	.legend {
+		font-size: 16px;
+		font-weight: bold;
+		text-anchor: middle;
+	}
+	.center{
+		margin:auto;
+		width:400px;
+	}
 	.state{
 		fill: none;
 		stroke: #a9a9a9;
@@ -19,7 +40,7 @@
 	#tooltip h4{
 		margin:0;
 		font-size:18px;
-    color: plum;
+		color: white;
 	}
 	#tooltip{
     position: absolute;           
@@ -47,107 +68,388 @@
 	#tooltip tr td:nth-child(2){
 		text-align:center;
 	}
+	div.relative {
+	  position: relative;
+	  left: 10px
+	}
+
 </style>
 <body>
-<h1><center><h1>CRAFT BEER TAKEOVER</center></h1>
+	<br><br><br>
+	<body style="background-color:white;">
+	<h1><center><h1>IS CRAFT BEER TAKING OVER?</center></h1>
 
-<br><br>
-<h1><center>Over the last twenty years the craft beer movement has grown from a brew kit in someone's home to an industry serving hundreds of thousands of patrons each year. Craft brewers have invade your local grocery store, your everyday bar, and most likely, your fridge. Craft breweries are alive and thriving and showing no signs of slowing down.  Today, we will dive into the many locations, breweries, types of beers and flavors.
-</center>
-<br><br>
-
- <h1><center>BREWERIES PER STATE</center></h1>
- <br><br>
- <center><h1>The map below depicts the number of craft breweries by state with the darker the red, the more craft breweries the state has.  When exploring, it is easy of see that some of the states that are more involved in craft brewing include California, Colorado and Washington.</center?
- </h1>
- <br><br>
-<div id="tooltip"></div><!-- div to hold tooltip. -->
-<svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
-<script src="uStates.js"></script> <!-- creates uStates. -->
-<script src="http://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-
-<script>
-
-	function tooltipHtml(n, cases){	/* function to create html content string in tooltip div. */
-		return "<h4>"+n+"</h4><table>"+
-			"<tr><td>Breweries:</td><td>"+(cases)+"</td></tr></table>";
-	}
-  
-  beer_data = [];
-  
-  d3.csv("brew.csv", function (data) {
-    data.forEach(function (d) {
-    	beer_data.push({"state": d.state, "cases": +d.cases});  
-      
-    })
-  
-	var sampleData = [];	
-	start = 1;
-	end = 1 + d3.max(beer_data, function (d) { console.log(d); return d.cases });
-    
-
-    const logScale = d3.scaleLog()
-      .domain([start, end])
-    const colorScaleLog = d3.scaleSequential(
-        (d) => {
-          return d3.interpolateOranges(logScale(d)) }
-      )   
+	<br><br>
 	
-		beer_data.forEach(function(d){
-    	
-    	uStatePaths.forEach(function (s) {
-       
-        if (d.state == s.n) { 
-          d.n = s.n;
-        	d.d = s.d;
-        	d.id = s.id;
-        }
-      })
-   
-	cases = +d.cases;
-    
-  
+	<h1><center>Over the last twenty years the craft beer movement has grown from a brew kit in someone's home garage to an industry serving hundreds of thousands of patrons each year. Craft brewers have seemed to invaded your local grocery store, your everyday bar, and most likely, your fridge. Today, we will explore the rise of Craft Breweries .
+	
+	
+	
 
-		sampleData.push({
-	   n: d.n,
-	   state: d.state,
-	   cases: cases,
-	   path: d.d,
-	   color: colorScaleLog(cases),
-	   color2:d3.interpolate("#000000", "#ffffff")(Math.round(cases)/100)});
-			});
+	
+	
+	
+	
+	
+	
+	</center><br><br>
 
-		uStates.draw("#statesvg", sampleData, tooltipHtml);
-		 })
-		d3.select(self.frameElement).style("height", "600px"); 
-	</script>
+	<h1><center>BREWERIES PER STATE</center></h1>
+	
+	<br><br>
+	
+	<center><h1>The map below depicts the number of craft breweries by state where the darker the red, the more craft breweries the state has.  When exploring, it is easy to see that some of the states that are more involved in craft brewing include California, Colorado and Washington.  (Year - 2015)</center?
+	 </h1>
+	 <br><br>
+	<div id="tooltip"></div><!-- div to hold tooltip. -->
+	<svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
+	<script src="uStates.js"></script> <!-- creates uStates. -->
+	<script src="http://d3js.org/d3.v4.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<script>
+
+		function tooltipHtml(n, cases){	/* function to create html content string in tooltip div. */
+			return "<h4>"+n+"</h4><table>"+
+				"<tr><td>Breweries:</td><td>"+(cases)+"</td></tr></table>";
+		}
+	  
+	  beer_data = [];
+	  
+	  d3.csv("brew.csv", function (data) {
+		data.forEach(function (d) {
+			beer_data.push({"state": d.state, "cases": +d.cases});  
+		  
+		})
+	  
+		var sampleData = [];	
+		start = 1;
+		end = 1 + d3.max(beer_data, function (d) { console.log(d); return d.cases });
+		
+
+		const logScale = d3.scaleLog()
+		  .domain([start, end])
+		const colorScaleLog = d3.scaleSequential(
+			(d) => {
+			  return d3.interpolateOranges(logScale(d)) }
+		  )   
+		
+			beer_data.forEach(function(d){
+			
+			uStatePaths.forEach(function (s) {
+		   
+			if (d.state == s.n) { 
+			  d.n = s.n;
+				d.d = s.d;
+				d.id = s.id;
+			}
+		  })
+	   
+		cases = +d.cases;
+		
+	  
+
+			sampleData.push({
+		   n: d.n,
+		   state: d.state,
+		   cases: cases,
+		   path: d.d,
+		   color: colorScaleLog(cases),
+		   color2:d3.interpolate("#000000", "#ffffff")(Math.round(cases)/100)});
+				});
+
+			uStates.draw("#statesvg", sampleData, tooltipHtml);
+			 })
+			d3.select(self.frameElement).style("height", "600px"); 
+		</script>
 	<br><br>
 	<h1><center>BREWERIES PER CITY</h1><br><br>
 	<h1>
-	This next visualization takes where beer is brewed to the next level and focuses more on what specific city brew beer.  The bigger the circle, the more brewerie the city has.  As you can see, some of the most popular cities for craft beers include San Diego, Manchester and Chico
+	This next visualization takes where beer is brewed to the next level and focuses more on what specific cities the craft beer scene is really growing.  The bigger the circle, the more breweries the city has.  As you can see, some of the most popular cities for craft beers include San Diego, Manchester and Chico
 	</h1>
 	
 	
 	
 	<br><br><br><br>
 	
-	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book2&#47;Sheet3' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
-
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;196v' /><param name='name' value='brewpopbeer&#47;Sheet3' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
 	<br><br><br><br>
 	<h1><center>MOST POPULAR TYPES OF BEER</h1></center>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<br><br>
-	<h1><center>This visualization is depicting the different types of beer and then ranks them in the order from the most popular to the least.</center>
+	<h1><center>Is craft beer changing the popularity and accessibility of lesser known styles of beer? This visualization goes deep into the overall ranking (Appearence, Aroma, Palate, and Taste) </center>
 	
 	<br><br><br><br>
-	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book5&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;196v' /><param name='name' value='brewpopbeer&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+
 	<br><br><br><br>
-	<h1><center>MOST POPULAR BEER PER BREWERY</h1>
+	<h1><center>MOST POPULAR BREWERY</h1>
 	
 	<br><br>
-	<h1>This visualization show chunk of different breweries and the beer that they make.  The best rated beer that they make will be on the upper left hand corner of the “brewery square” and the worst rated beer will be on the lower right hand corner.
+	<h1><center>This visualization shows the breweries with the most postive reviews.  From here you are able to see some of the most popular breweries.</center>
 	<br><br><br><br></h1>
-	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' />  <param name='site_root' value='&#47;t&#47;jacybranenatcsusedu' /><param name='name' value='Book2&#47;Sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+	<script type='text/javascript' src='https://10ay.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1366px; height: 565px;'><object class='tableauViz' width='1366' height='565' style='display:none;'><param name='host_url' value='https%3A%2F%2F10ay.online.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='&#47;t&#47;196v' /><param name='name' value='brewpopbeer2&#47;Sheet9' /><param name='tabs' value='no' /><param name='toolbar' value='no' /><param name='showAppBanner' value='false' /><param name='filter' value='iframeSizedToWindow=true' /></object></div>
+	
+	<br><br><br><br>
+	<h1><center>Growth of craft breweries though the years by State</h1></center>
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+// Set the dimensions of the canvas / graph
+var margin = {top: 30, right: 20, bottom: 70, left: 50},
+    width = 1200 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+// Parse the date / time
+var parseDate = d3.time.format("%b %Y").parse;
+
+// Set the ranges
+var x = d3.time.scale().range([0, width]);
+var y = d3.scale.linear().range([height, 0]);
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom").ticks(5);
+
+var yAxis = d3.svg.axis().scale(y)
+    .orient("left").ticks(5);
+
+// Define the line
+var priceline = d3.svg.line()	
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.price); });
+    
+// Adds the svg canvas
+var svg = d3.select("body")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("beerdata.csv", function(error, data) {
+    data.forEach(function(d) {
+		d.date = parseDate(d.date);
+		d.price = +d.price;
+    });
+
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.price; })]);
+
+    // Nest the entries by symbol
+    var dataNest = d3.nest()
+        .key(function(d) {return d.symbol;})
+        .entries(data);
+
+    var color = d3.scale.category10();   // set the colour scale
+
+    legendSpace = width/dataNest.length; // spacing for the legend
+
+    // Loop through each symbol / key
+    dataNest.forEach(function(d,i) { 
+
+        svg.append("path")
+            .attr("class", "line")
+            .style("stroke", function() { // Add the colours dynamically
+                return d.color = color(d.key); })
+            .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
+            .attr("d", priceline(d.values));
+
+        // Add the Legend
+        svg.append("text")
+            .attr("x", (legendSpace/2)+i*legendSpace)  // space legend
+            .attr("y", height + (margin.bottom/2)+ 5)
+            .attr("class", "legend")    // style the legend
+            .style("fill", function() { // Add the colours dynamically
+                return d.color = color(d.key); })
+            .on("click", function(){
+                // Determine if current line is visible 
+                var active   = d.active ? false : true,
+                newOpacity = active ? 0 : 1; 
+                // Hide or show the elements based on the ID
+                d3.select("#tag"+d.key.replace(/\s+/g, ''))
+                    .transition().duration(100) 
+                    .style("opacity", newOpacity); 
+                // Update whether or not the elements are active
+                d.active = active;
+                })  
+            .text(d.key); 
+
+    });
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+});
+
+</script></div>
+
+
+
+
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+
+<h1><center>Craft breweries are alive and thriving and show no signs of slowing down!</h1></center>
+<br><br>
+<h1><center>What kind of craft beer are you going to try next?</h1></center>
+
+
+
+ <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
+  <script>
+
+//Simple animated example of d3-cloud - https://github.com/jasondavies/d3-cloud
+//Based on https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
+
+// Encapsulate the word cloud functionality
+function wordCloud(selector) {
+
+    var fill = d3.scale.category20();
+
+    //Construct the word cloud's SVG element
+    var svg = d3.select(selector).append("svg")
+	   
+        .attr("width", 500)
+        .attr("height", 500)
+        .append("g")
+        .attr("transform", "translate(250,250)");
+
+
+    //Draw the word cloud
+    function draw(words) {
+        var cloud = svg.selectAll("g text")
+                        .data(words, function(d) { return d.text; })
+
+        //Entering words
+        cloud.enter()
+            .append("text")
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) { return fill(i); })
+            .attr("text-anchor", "middle")
+            .attr('font-size', 1)
+            .text(function(d) { return d.text; });
+
+        //Entering and existing words
+        cloud
+            .transition()
+                .duration(600)
+                .style("font-size", function(d) { return d.size + "px"; })
+                .attr("transform", function(d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .style("fill-opacity", 1);
+
+        //Exiting words
+        cloud.exit()
+            .transition()
+                .duration(200)
+                .style('fill-opacity', 1e-6)
+                .attr('font-size', 1)
+                .remove();
+    }
+
+
+    //Use the module pattern to encapsulate the visualisation code. We'll
+    // expose only the parts that need to be public.
+    return {
+
+        //Recompute the word cloud for a new set of words. This method will
+        // asycnhronously call draw when the layout has been computed.
+        //The outside world will need to call this function, so make it part
+        // of the wordCloud return value.
+        update: function(words) {
+            d3.layout.cloud().size([500, 500])
+                .words(words)
+                .padding(5)
+                .rotate(function() { return ~~(Math.random() * 2) * 90; })
+                .font("Impact")
+                .fontSize(function(d) { return d.size; })
+                .on("end", draw)
+                .start();
+        }
+    }
+
+}
+
+//Some sample data - http://en.wikiquote.org/wiki/Opening_lines
+var words = [
+    "Stout Porter Sour Lager Saison Hefewsizen Session Kolsch Imperial Gose Belgian Amber Brown Wheat Pale Red Strong Pilsner PaleAle Light Golden Honey Blonde Malt Ale Cider Dark Fruit IPA"
+]
+
+//Prepare one of the sample sentences by removing punctuation,
+// creating an array of words and computing a random size attribute.
+function getWords(i) {
+    return words[i]
+            .replace(/[!\.,:;\?]/g, '')
+            .split(' ')
+            .map(function(d) {
+                return {text: d, size: 10 + Math.random() * 60};
+            })
+}
+
+//This method tells the word cloud to redraw with a new set of words.
+//In reality the new words would probably come from a server request,
+// user input or some other source.
+function showNewWords(vis, i) {
+    i = i || 0;
+
+    vis.update(getWords(i ++ % words.length))
+    setTimeout(function() { showNewWords(vis, i + 1)}, 2000)
+}
+
+//Create a new instance of the word cloud visualisation.
+var myWordCloud = wordCloud('body');
+
+//Start cycling through the demo data
+showNewWords(myWordCloud);
+
+
+</script>
+
+
+<img src="beer.jpg" alt="Trulli" width="700" height="433">
+
+
+
+
+
+
+
+
 	
 	
 	
